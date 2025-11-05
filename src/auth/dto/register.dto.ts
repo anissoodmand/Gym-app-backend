@@ -1,7 +1,8 @@
 import { IsString, Length, IsOptional } from 'class-validator';
 
 export class RegisterDto {
-  // @IsPhoneNumber('IR')
+  @IsString()
+  @Length(11, 11)
   phone: string;
 
   @IsString()
