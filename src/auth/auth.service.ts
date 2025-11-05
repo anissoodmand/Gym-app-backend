@@ -37,7 +37,7 @@ export class AuthService {
 
     await this.profileModel.create({
       userId: user._id,
-      fullname: dto.fullname,
+      name: dto.name,
       nationalId: dto.nationalId,
       birthDate: dto.birthDate,
       fatherName: dto.fatherName,

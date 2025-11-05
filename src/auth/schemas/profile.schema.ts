@@ -6,7 +6,7 @@ export class Profile extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
   @Prop() phone: string;
-  @Prop() fullname: string;
+  @Prop() name: string;
   @Prop({ unique: true }) nationalId: string;
   @Prop() birthDate: Date;
   @Prop() fatherName: string;

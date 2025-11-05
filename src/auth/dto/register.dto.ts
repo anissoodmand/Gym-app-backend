@@ -9,7 +9,7 @@ export class RegisterDto {
   @Length(10, 10)
   nationalIdAsPassword: string;
 
-  @IsString() fullname: string;
+  @IsString() name: string;
   @IsString() nationalId: string;
   @IsOptional() birthDate?: string;
   @IsOptional() fatherName?: string;
