@@ -17,8 +17,8 @@ export class AuthController {
     const result = await this.authService.register(dto);
     res.cookie('refresh_token', result.refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
       maxAge: ms('7d'),
     });
     return { accessToken: result.accessToken, user: result.user };
@@ -32,8 +32,8 @@ export class AuthController {
     const result = await this.authService.login(dto);
     res.cookie('refresh_token', result.refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
       maxAge: Number(ms('7d')),
     });
     return { accessToken: result.accessToken, user: result.user };

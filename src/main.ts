@@ -15,7 +15,11 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    origin: [
+      'https://gym-typescript-test.netlify.app',
+      'http://localhost:5000',
+      'http://localhost:5173',
+    ],
     credentials: true,
   });
 
