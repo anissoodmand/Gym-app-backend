@@ -9,8 +9,8 @@ export class User extends Document {
   @Prop({ required: true })
   passwordHash: string;
 
-  @Prop({ default: ['user'] })
-  roles: string[];
+  @Prop({ default: 'user' })
+  role: string;
 
   @Prop()
   refreshTokenHash?: string;
