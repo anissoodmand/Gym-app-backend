@@ -11,6 +11,11 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from './schemas/user.schema';
 import { Profile } from './schemas/profile.schema';
+import {
+  jalaliToGregorian,
+  gregorianToJalali,
+  isValidJalaliDate,
+} from './utils/jalali-date.util';
 
 @Injectable()
 export class AuthService {
@@ -45,6 +50,21 @@ export class AuthService {
     if (nationalIdExists)
       throw new BadRequestException('این کد ملی قبلاً ثبت شده است');
 
+    // Convert Jalali date to Gregorian for storage
+    let birthDate: Date | undefined;
+    if (dto.birthDate) {
+      if (!isValidJalaliDate(dto.birthDate)) {
+        throw new BadRequestException(
+          'فرمت تاریخ تولد نامعتبر است. فرمت صحیح: YYYY/MM/DD (شمسی)',
+        );
+      }
+      const gregorianDate = jalaliToGregorian(dto.birthDate);
+      if (!gregorianDate) {
+        throw new BadRequestException('تاریخ تولد نامعتبر است');
+      }
+      birthDate = gregorianDate;
+    }
+
     const saltRounds = +(process.env.BCRYPT_SALT_ROUNDS ?? 10);
     const passwordHash = await bcrypt.hash(
       dto.nationalIdAsPassword,
@@ -60,7 +80,7 @@ export class AuthService {
       userId: user._id,
       name: dto.name,
       nationalId: dto.nationalId,
-      birthDate: dto.birthDate,
+      birthDate: birthDate,
       fatherName: dto.fatherName,
       address: dto.address,
     });
@@ -124,11 +144,17 @@ export class AuthService {
 
     const profile = await this.profileModel.findOne({ userId: user._id });
 
+    // Convert Gregorian date back to Jalali for response
+    const birthDateJalali = profile?.birthDate
+      ? gregorianToJalali(profile.birthDate)
+      : null;
+
     return {
       id: user._id,
       name: profile?.name || null,
       phone: user.phone,
       status: (user as User & { status?: string }).status || 'active',
+      birthDate: birthDateJalali,
     };
   }
 }
