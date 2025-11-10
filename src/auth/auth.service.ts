@@ -11,11 +11,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from './schemas/user.schema';
 import { Profile } from './schemas/profile.schema';
-import {
-  jalaliToGregorian,
-  gregorianToJalali,
-  isValidJalaliDate,
-} from './utils/jalali-date.util';
+import { jalaliToGregorian, isValidJalaliDate } from './utils/jalali-date.util';
 
 @Injectable()
 export class AuthService {
@@ -144,17 +140,11 @@ export class AuthService {
 
     const profile = await this.profileModel.findOne({ userId: user._id });
 
-    // Convert Gregorian date back to Jalali for response
-    const birthDateJalali = profile?.birthDate
-      ? gregorianToJalali(profile.birthDate)
-      : null;
-
     return {
       id: user._id,
       name: profile?.name || null,
       phone: user.phone,
       status: (user as User & { status?: string }).status || 'active',
-      birthDate: birthDateJalali,
     };
   }
 }
