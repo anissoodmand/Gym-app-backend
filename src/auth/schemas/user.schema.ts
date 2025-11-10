@@ -14,6 +14,9 @@ export class User extends Document {
 
   @Prop()
   refreshTokenHash?: string;
+
+  @Prop({ default: 'active' })
+  status: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
