@@ -24,6 +24,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.register(dto);
+    res.setHeader('Authorization', `Bearer ${result.accessToken}`);
+    res.setHeader('X-Refresh-Token', result.refreshToken);
+    res.setHeader(
+      'Access-Control-Expose-Headers',
+      'Authorization, X-Refresh-Token',
+    );
     res.cookie('refresh_token', result.refreshToken, {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
@@ -42,6 +48,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
+    res.setHeader('Authorization', `Bearer ${result.accessToken}`);
+    res.setHeader('X-Refresh-Token', result.refreshToken);
+    res.setHeader(
+      'Access-Control-Expose-Headers',
+      'Authorization, X-Refresh-Token',
+    );
     res.cookie('refresh_token', result.refreshToken, {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
